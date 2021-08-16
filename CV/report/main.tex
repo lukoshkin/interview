@@ -108,14 +108,17 @@ creation).
 
 \section{Results}
 
-Tested clustering methods (feature extraction with PCA, HOG, and just flattened
-samples) have shown to be ineffective in labeling data. A significant percent
-of images are wrongly classified; therefore, training on such a dataset gets
-meaningless.
+Tested clustering methods (on flattened samples or even with feature
+extraction: PCA, HOG, autoencoders) have shown to be ineffective in labeling
+data. A significant percent of images are wrongly classified; therefore,
+training on such a dataset gets meaningless.
 
 Training on a third-party dataset leads to more correct data markup. However,
 sometimes it becomes difficult to achieve the same validation score in the experiments
 with a fixed seed since random state changes with any code modification and also
 depends on the platform.
+
+I admit that the poor experimental results may be due to dummy network architectures
+used or because of the wrong choice of approaches.
 
 \end{document}

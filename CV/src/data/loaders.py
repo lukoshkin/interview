@@ -12,7 +12,7 @@ class BatchLoader:
         self.y = y
         self.batch_size = batch_size
         self._reinit()
-        
+
     def __len__(self):
         return len(self.y) // self.batch_size
 
@@ -22,12 +22,40 @@ class BatchLoader:
 
         for i in range(0, len(self.y), bs):
             yield self.X[i:i+bs], self.y[i:i+bs]
-            
+
         self._reinit()
 
     def _reinit(self):
         self.gen = self._gen()
-        
+
+    def __iter__(self):
+        return self.gen
+
+
+class AEBatchLoader:
+    """
+    Expects torch.Tensor-s as input
+    """
+    def __init__(self, X, batch_size):
+        self.X = X
+        self.batch_size = batch_size
+        self._reinit()
+
+    def __len__(self):
+        return len(self.X) // self.batch_size
+
+    def _gen(self):
+        bs = self.batch_size  # alias
+        ids = torch.randperm(len(self.X))
+
+        for i in range(0, len(ids), bs):
+            yield self.X[i:i+bs]
+
+        self._reinit()
+
+    def _reinit(self):
+        self.gen = self._gen()
+
     def __iter__(self):
         return self.gen
 
@@ -54,7 +82,7 @@ class MRLEyesData(torch_data.Dataset):
     def __getitem__(self, idx):
         fname = self.fnames[idx]
         target = self.targets[idx]
-        
+
         img = cv2.imread(str(fname), cv2.IMREAD_GRAYSCALE)
         img = cv2.resize(img, (24, 24))
         img = img[None].astype('f4') / 255
